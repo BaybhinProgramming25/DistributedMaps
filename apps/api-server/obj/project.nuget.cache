@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "DZAosgoiPJw=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\baybh\\Projects\\DistributedMaps\\apps\\api-server\\api-server.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\baybh\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.9\\microsoft.aspnetcore.openapi.9.0.9.nupkg.sha512",
+    "C:\\Users\\baybh\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}

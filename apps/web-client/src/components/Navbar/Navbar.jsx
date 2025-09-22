@@ -19,12 +19,10 @@ export const Navbar = () => {
 
     const [menuOpen, setMenuOpen] = useState(false);
 
-
-
     return (
         <> 
             <nav>
-                <NavLink to="/" className='title'>Website</NavLink>
+                <NavLink to="/" className='title'>Maps</NavLink>
                 <div className='menu' onClick={() => {
                     console.log(menuOpen);
                     setMenuOpen(!menuOpen)}}>    

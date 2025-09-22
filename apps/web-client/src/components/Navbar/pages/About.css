@@ -1,0 +1,16 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+    gap: 1rem; /* Space between grid items */
+    padding: 2rem;
+    flex: 1;
+    background: linear-gradient(270deg, #ff6b6b, #6F44DB, #45b7d1, #96ceb4);
+    background-size: 400% 400%;  /* Make it bigger than container */
+    animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}

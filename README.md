@@ -1,8 +1,8 @@
-# Distributed-Maps-Clone
+# Distributed Maps 
 
 The goal of this project is to develop a distributed systems maps clone. Given the geographical data of various regions, we are responisble for storing geographical data on a geographical supproted database and develop a backend server capable of making calls to our database. In subsequent distributions of the project, caching will be implemented in order to achieve QoS constraints.
 
-This project was able to handle a QoS target requirement of 1600 requests per second (rps), with 95% of the requests responding under 50 ms. 
+This project was able to handle a __QoS target requirement of 1600 requests per second (rps), with 95% of the requests responding under 50 ms.__
 
 # Technologies Used:
 
@@ -13,11 +13,6 @@ This project was able to handle a QoS target requirement of 1600 requests per se
 - Nginx
 - Docker
 - Memcached 
-
-
-## Operating System
-This program is made strictly for the __Windows OS__ 
-
 
 # Disclaimers:
 
@@ -123,23 +118,21 @@ docker-compose -f docker-compose-second.yml --scale server={# of servers} --scal
 
 
 ## Map Forms 
-
 - Search 
     - Search Term (required): Input the name of the location you want to search 
     - Only-In-Box (required): This determines whether or not objects within the bounding box of the search term should be included or not. If set to true, then only objects within the query bbox are returned, with coordinates pointing to the center of the __VISIBLE PORTION__ of the object within the queried bounding box. If false, then coordinates are the center of the object and bbox is the bounding box that includes the entire object.
 
-
 - Convert
-    - Zoom (required): A __numerical value__ representing the zoom level 
-    - Latitude (required):"A __numerical value__ representing the latitude 
-    - Longitude (required): A __numerical value__ representing the longitude
+    - Zoom (required): A numerical value representing the zoom level 
+    - Latitude (required): A numerical value representing the latitude 
+    - Longitude (required): A numerical value representing the longitude
 
 - Route 
-    - Source Lat (required): A __numerical value__ representing the source latitude 
-    - Source Lon (required): A __numerical value__ representing the source longitude
-    - Dest Lat (required): A __numerical value__ representing the destination latitude
-    - Dest Lon (required): A __numerical value__ representing  the destination longitude 
+    - Source Lat (required): A numerical value representing the source latitude 
+    - Source Lon (required): A numerical value representing the source longitude
+    - Dest Lat (required): A numerical value representing the destination latitude
+    - Dest Lon (required): A numerical value representing  the destination longitude 
 
 - Address
-    - Latitude (required): A __numerical value__ representing the latitude
-    - Longitude (required): A __numerical value__ representing the longitude 
+    - Latitude (required): A numerical value representing the latitude
+    - Longitude (required): A numerical value representing the longitude 

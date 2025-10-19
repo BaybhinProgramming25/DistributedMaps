@@ -15,16 +15,27 @@ This project was able to handle a QoS target requirement of 1600 requests per se
 - Memcached 
 
 
+## Operating System
+This program is made strictly for the __Windows OS__ 
+
+
 # Disclaimers:
 
 ## Disclaimer #1:
-
 Users will have to downloaded the following onto their system in order to utilize the project:
-
 
 - Docker 
 - Docker-compose 
 
+## Windows
+You can install Docker via the Docker Installer. 
+
+```
+https://docs.docker.com/desktop/setup/install/windows-install/
+```
+Follow the instructions to install Docker. It will ask you to restart the computer and it will also install Docker-compose with it.
+
+## Unix
 Go to the scripts directory and run the docker script  
 
 ```
@@ -39,12 +50,9 @@ chmod +x docker-compose-install.sh
 ./docker-compose-install.sh
 ```
 
-__Note: This assumes you are using a Linux distribution, there is currently no equivalent script for Windows yet__ 
-
 ## Disclaimer #2:
 
-Due to GitHub's size limit of 100 MBs and the need to use GitLFS, it is best to download the map data from the following website:
-
+Due to GitHub's size limit of 100 MBs and the need to use GitLFS, you will need to __create the map-data folder__ 
 
 ```
 https://download.geofabrik.de/
@@ -53,16 +61,13 @@ https://download.geofabrik.de/
 Once you've downloaded the intended .osm.pbf file, __place the file in the map-data folder__
 
 
-# Running the program with single server instance
+# Running Program 
+
+## Single Instances
 
 To run the program normally:
 
-```
-docker-compose -f docker-compose-first.yml up --build
-docker-compose -f docker-compose-second.yml up --build
-```
 
-To run in detach mode (recommended):
 ```
 docker-compose -f docker-compose-first.yml up --build -d
 docker-compose -f docker-compose-second.yml up --build -d 
@@ -74,8 +79,7 @@ On your browser's search bar, type the following:
 http://localhost:81/
 ```
 
-
-# Running the program with multiple server instances
+# Multiple Server Instances
 
 To run multiple instances of the backend server:
 
@@ -129,7 +133,6 @@ docker-compose -f docker-compose-second.yml --scale server={# of servers} --scal
     - Zoom (required): A __numerical value__ representing the zoom level 
     - Latitude (required):"A __numerical value__ representing the latitude 
     - Longitude (required): A __numerical value__ representing the longitude
-
 
 - Route 
     - Source Lat (required): A __numerical value__ representing the source latitude 

@@ -1,0 +1,67 @@
+services:
+  osm-import:
+    image: overv/openstreetmap-tile-server
+    volumes:
+      - /projects/maps-clone/map-data/us-northeast-latest.osm.pbf:/data/region.osm.pbf
+      - osm-data:/data/database/
+    command: import
+    networks:
+      - dist-maps-app
+    profiles:
+      - import  
+
+  react-app:
+    image: node:20-alpine
+    working_dir: /app
+    ports:
+      - '5173:5173'
+    volumes:
+      - ./web:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run dev -- --host"
+    networks:
+      - dist-maps-app
+
+  backend-server:
+    build: ./server
+    image: maps-server
+    ports:
+      - '8000:8000'
+    depends_on:
+      - mongo
+      - mailhog
+    networks:
+      - dist-maps-app
+
+  tileserver:
+    image: overv/openstreetmap-tile-server
+    ports:
+      - '8080:80'
+    volumes:
+      - osm-data:/data/database/
+    command: run
+    networks:
+      - dist-maps-app
+ 
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - '8025:8025'
+    networks:
+      - dist-maps-app
+     
+  mongo:
+    image: mongo:5.0
+    ports:
+      - '27017:27017'
+    volumes:
+      - 'mongo:/data/db'
+    networks:
+      - dist-maps-app
+ 
+networks:
+  dist-maps-app:
+
+volumes:
+  mongo:
+  osm-data:

@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import './ContactUs.css';
 
 function ContactUs() {
@@ -9,11 +8,14 @@ function ContactUs() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your contact form logic here
+
+    // Goes to an endpoint, for now just console.log
+
     console.log('Name:', name);
     console.log('Email:', email);
     console.log('Subject:', subject);
     console.log('Message:', message);
+
     alert('Thank you for contacting us! We will get back to you soon.');
   };
 

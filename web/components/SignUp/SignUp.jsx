@@ -9,7 +9,7 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
 
     e.preventDefault();
 
@@ -19,15 +19,12 @@ const SignUp = () => {
     }
 
     var data = { "username": username, "password": password, "email": email }
+    const response = await axios.post('http://localhost:8000/api/signup',  data);
+    console.log(response);
 
-    axios.post('http://localhost:8000/api/adduser', data)
-    .then(response => {
-      console.log(response.data);
-    })
-    .catch(error => {
-      console.log(error.response.data.message);
-      console.error('Problem with fetching', error);
-    })
+    // Perform redirection to the 'An email has been sent route' 
+    
+
   };
 
   return (

@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import './ContactUs.css';
 
-function ContactUs() {
+const ContactUs = () => {
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios'
+
 import './Login.css';
 
 const Login = () => {
@@ -7,22 +8,16 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
       e.preventDefault();
 
-      console.log('Email:', email);
-      console.log('Password:', password);
+      var data = { 
+        "email": email, 
+        "password": password 
+      };
 
-      var data = { "email": email, "password": password };
-
-      axios.post('http://localhost:8000/api/login', data)
-      .then(response => {
-        console.log(response.data);
-      })
-      .catch(error => {
-        console.log(error.response.data.message);
-        console.error('Problem with fetch', error);
-      });
+      const response = await axios.post('http://localhost:8000/api/login', data);
+      console.log(response);
   };
 
   return (

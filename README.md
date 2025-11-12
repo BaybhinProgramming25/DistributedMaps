@@ -47,13 +47,13 @@ chmod +x docker-compose-install.sh
 
 ## Disclaimer #2:
 
-Due to GitHub's size limit of 100 MBs and the need to use GitLFS, you will need to __create the map-data folder__ 
+Due to GitHub's size limit of 100 MBs and the need to use GitLFS, you will need to __create the map-data folder.__ 
 
 ```
 https://download.geofabrik.de/
 ```
 
-Once you've downloaded the intended .osm.pbf file, __place the file in the map-data folder__
+Once you've downloaded the intended .osm.pbf file, __place the file in the map-data folder.__
 
 
 # Running Program 
@@ -76,23 +76,15 @@ http://localhost:81/
 
 # Multiple Server Instances
 
-To run multiple instances of the backend server:
+Run the following instances if you want multiple servers:
 
 ```
 docker-compose -f docker-compose-second.yml --scale server={# of servers} up --build -d 
-```
-
-To run multiple instances of the tile server: 
-
-```
 docker-compose -f docker-compose-second.yml --scale tileserver={# of servers} up --build -d 
-```
-
-To run both, multiple instances of the backend server and tileserver, run: 
-
-```
 docker-compose -f docker-compose-second.yml --scale server={# of servers} --scale tileserver={# of servers} up --build -d 
 ```
+
+Kubernetes Coming Soon...
 
 
 # User Interation 
@@ -108,7 +100,7 @@ docker-compose -f docker-compose-second.yml --scale server={# of servers} --scal
     - Username (required): Input an existing username
     - Password (required): Input an existing password
 
-    After logging in, a __session is created for the user__. 
+    After logging in, a __session is created for the user.__
 
 - Logout
     - If the user is logged in, they can press submit to logout and terminate the user session 

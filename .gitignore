@@ -1,2 +1,5 @@
 # Ignore the northeast data
 map-data/
+
+# Ignore .vscode
+.vscode/

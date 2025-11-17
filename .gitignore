@@ -3,3 +3,6 @@ map-data/
 
 # Ignore .vscode
 .vscode/
+
+# Ignore load testing (internal)
+k6/

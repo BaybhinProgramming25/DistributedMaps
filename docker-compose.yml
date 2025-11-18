@@ -1,25 +1,30 @@
 services: 
+  osm-import:
+    image: overv/openstreetmap-tile-server
+    command: import 
+    volumes:
+      - /absolute/path/to/.osm.pbf/file:/data/region.osm.pbf
+      - osm-data:/data/database
+    profiles:
+      - db_load 
+
   frontend:
-    image: node:20-alpine
-    working_dir: /app
-    volumes: # Remove when going into production
-      - ./Web:/app
-      - /app/node_modules # Anonymous volume 
-    command: sh -c "npm install && npm run dev -- --host"
+    image: maps-frontend 
+    build:
+      context: ./Web
+      dockerfile: Dockerfile 
     ports: 
       - "5173:5173"
     depends_on:
       - backend 
     networks:
       - dist-maps 
-  
+
   backend:
-    image: node:20-alpine
-    working_dir: /app
-    volumes:
-      - ./server:/app
-      - /app/node_modules 
-    command: sh -c "npm install && npm run dev"
+    image: maps-backend 
+    build: 
+      context: ./server
+      dockerfile: Dockerfile 
     ports:
       - "8000:8000"
     depends_on:
@@ -44,13 +49,6 @@ services:
       - 'mongo:/data/db'
     networks:
       - dist-maps 
-  
-  osm-import:
-    image: overv/openstreetmap-tile-server
-    command: import 
-    volumes:
-      - /c/Users/baybh/Projects/DistributedMaps/map-data/north-america-latest.osm.pbf:/data/region.osm.pbf
-      - osm-data:/data/database
     
   tileserver:
     image: overv/openstreetmap-tile-server 
@@ -58,11 +56,8 @@ services:
     ports:
       - "8080:80" 
       - "5432:5432"
-      
     volumes:
       - osm-data:/data/database
-    depends_on:
-      - osm-import
     networks:
       - dist-maps 
 

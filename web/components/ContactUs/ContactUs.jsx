@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import './ContactUs.css';
 
 const ContactUs = () => {
@@ -8,15 +9,18 @@ const ContactUs = () => {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Goes to an endpoint, for now just console.log
+    const data = {
+      name: name,
+      email: email,
+      subject: subject,
+      message: message
+    }
 
-    console.log('Name:', name);
-    console.log('Email:', email);
-    console.log('Subject:', subject);
-    console.log('Message:', message);
+    const response = await axios.post('http://localhost:8000/api/contactus', data);
+    console.log(response);
 
     alert('Thank you for contacting us! We will get back to you soon.');
   };

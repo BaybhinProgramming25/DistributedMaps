@@ -6,3 +6,6 @@ map-data/
 
 # Ignore load testing (internal)
 k6/
+
+# Ignore k8s files 
+k8s/

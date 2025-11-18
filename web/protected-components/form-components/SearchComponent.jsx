@@ -35,7 +35,7 @@ const SearchForm = () => {
       const response = await axios.post('http://localhost:8000/api/search', data);
       console.log(response);
 
-      if (!response.ok) throw new Error('Network response was not ok');
+      if (!response.status) throw new Error('Network response was not ok');
       
       const results = response.data
       

@@ -17,7 +17,7 @@ const Dashboard = () => {
           zoom={3} 
           style={{ height: '90vh', width: '100vw'}}>
           <TileLayer
-            url="http://localhost:8000/tiles/{z}/{x}/{y}.png"
+            url="http://localhost:8080/tile/{z}/{x}/{y}.png"
             attribution='&copy; OpenStreetMap contributors'
           />
           <Marker position={[51.505, -0.09]}>

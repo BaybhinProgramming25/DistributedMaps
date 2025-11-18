@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthContext';
+
 import axios from 'axios'
 import './SignUp.css';
 
@@ -8,6 +11,7 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
 
@@ -19,12 +23,11 @@ const SignUp = () => {
     }
 
     var data = { "username": username, "password": password, "email": email }
-    const response = await axios.post('http://localhost:8000/api/signup',  data);
+    const response = await axios.post('http://localhost:8000/api/signup', data);
     console.log(response);
 
-    // Perform redirection to the 'An email has been sent route' 
+    navigate("/verify-sent")
     
-
   };
 
   return (

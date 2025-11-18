@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
 import './Login.css';
@@ -8,7 +10,11 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
+
       e.preventDefault();
 
       var data = { 
@@ -16,8 +22,11 @@ const Login = () => {
         "password": password 
       };
 
-      const response = await axios.post('http://localhost:8000/api/login', data);
-      console.log(response);
+      const response = await axios.post('http://localhost:8000/api/login', data, { withCredentials: true });
+      const { user_data, accessToken } = response.data
+      
+      login(user_data, accessToken);
+      navigate('/dashboard');
   };
 
   return (

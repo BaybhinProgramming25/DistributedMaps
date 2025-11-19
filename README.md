@@ -9,6 +9,7 @@ This project was able to handle a __QoS target requirement of 1600 requests per 
 - Docker & Docker-Compose
 - Kubernetes via minikube
 - K6 Load Testing
+- Make 
 
 # Disclaimers:
 

@@ -1,8 +1,8 @@
-# Distributed Maps 
+# Tiny Maps 
 
-Distributed Maps is a small replica of existing maps applications with an emphasis on application scalability. 
+Tiny Maps is a small replica of existing maps applications with an emphasis on application load intensity. 
 
-This project was able to handle a __QoS target requirement of 1600 requests per second (rps), with 95% of the requests responding under 50 ms.__
+This project was able to reach a __QoS target requirement of 1600 requests per second (rps), with 95% of the requests responding under 50 ms.__
 
 # Technology Requirements
 

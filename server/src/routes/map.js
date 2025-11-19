@@ -4,14 +4,12 @@ const multer = require('multer');
 const pool = require('../configs/postgres.config');
 const { redisClient } = require('../configs/redis.config')
 
-
 const router = express.Router();
 const upload = multer();
 
 
 router.post('/api/convert', async (req, res) => {
 
-    console.log(req.body);
 
     const { lat, long, zoom } = req.body;
 
@@ -19,8 +17,6 @@ router.post('/api/convert', async (req, res) => {
 
         const key_string = `convert:${lat},${long},${zoom}`;
         const check_convert = await redisClient.get(key_string);
-
-        console.log(check_convert)
 
         if (check_convert) {
             const data = JSON.parse(check_convert);
@@ -30,7 +26,6 @@ router.post('/api/convert', async (req, res) => {
             });
         } 
         
-
         const latitude = lat;
         const longitude = long;
         const lat_rad = latitude * Math.PI / 180;
@@ -72,17 +67,13 @@ router.post('/api/search', upload.none(), async (req, res) => {
   let street = null;
   let city = null;
 
-  // Parse Search Term
   const location = searchTerm.split(',');
 
-  // Split the first part into house number and street
   let parts = location[0].split(' ');
   if (/\d/.test(parts[0])) {
-      // If the first part contains a number, assume it's the house number
       housenumber = parts.shift();
       street = parts.join(' ');
   } else {
-      // If the first part doesn't contain a number, assume it's part of the street
       housenumber = null;
       street = location[0].trim();
   }
@@ -90,7 +81,7 @@ router.post('/api/search', upload.none(), async (req, res) => {
   if (location[1]) {
       city = location[1].trim();
   } else {
-      city = street;  // Use the value of street as value of city as a fallback
+      city = street;  // Fallback 
   }
 
   const searchConditions = [];
@@ -202,7 +193,7 @@ router.post('/api/search', upload.none(), async (req, res) => {
         }
 
         await redisClient.setEx(`search:${searchTerm},${onlyInBox}`, 3600, JSON.parse(formattedResults));
-        res.status(200).json({ formattedResults: formattedResults});
+        return res.status(200).json({ formattedResults: formattedResults});
   }
   catch (error) {
       console.error('Error searching:', error);

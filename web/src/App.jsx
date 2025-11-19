@@ -7,23 +7,63 @@ import SignUp from '../components/SignUp/SignUp.jsx'
 import ContactUs from '../components/ContactUs/ContactUs.jsx'
 import About from '../components/About/About.jsx'
 import Footer from '../components/Footer/Footer.jsx'
+import EmailSent from '../components/VerifyEmailSent/VerifyEmailSent.jsx'
+
+import ProtectedRoute from '../protected-components/ProtectedRoutes.jsx'
+import Dashboard from '../protected-components/Dashboard/Dashboard.jsx'
+
+import { AuthProvider } from '../contexts/AuthContext.jsx'
 
 import './App.css'
+import PublicRoute from '../components/PublicRoute.jsx'
 
-function App() {
+const App = () => {
 
   return (
-    <BrowserRouter>
-      <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/contact" element={<ContactUs />} />
-        </Routes>
+    <AuthProvider>
+      <BrowserRouter>
+        <Navbar />
+          <Routes>
+
+            {/** Public Routes */}
+            <Route path="/" element={
+              <PublicRoute>
+                <Home />
+              </PublicRoute>
+            } />
+            <Route path="/login" element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            } />
+            <Route path="/signup" element={
+              <PublicRoute>
+                <SignUp />
+              </PublicRoute>
+            } />
+            <Route path="/verify-sent" element={
+              <PublicRoute>
+                <EmailSent />
+              </PublicRoute>
+            } />
+
+            <Route path='/about' element={<About />}></Route>
+            <Route path='/contact' element={<ContactUs />}></Route>
+
+            {/** Protected Route */}
+            <Route 
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+
+          </Routes>
         <Footer />
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 

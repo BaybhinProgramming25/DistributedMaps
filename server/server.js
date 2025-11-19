@@ -1,38 +1,47 @@
 const express = require('express');
+const cookieParser = require('cookie-parser')
 
 const mapRouter = require('./src/routes/map');
 const userRouter = require('./src/routes/user');
 const routeRouter = require('./src/routes/routing')
 
-const { connectToMongoDB, closeConnection } = require('./src/configs/mongo.config');
+const { mongoConnect, mongoClose } = require('./src/configs/mongo.config');
+const { redisConnect, redisClose } = require('./src/configs/redis.config');
 
 const app = express();
-const port = 8000;
 
 app.use(express.json()); 
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 
-async function startServer() {
+const startServer = async () => {
   
   try {
 
-    // Keep this commented out for now 
-    await connectToMongoDB(); 
+    await redisConnect();
+    await mongoConnect(); 
 
-    // Also keep this commented our for now 
     app.use('/', mapRouter);
     app.use('/', routeRouter);
     app.use('/', userRouter);
 
-    app.listen(port, () => {
-      console.log(`Server running at http://localhost:${port}`);
-    });
+
+    app.listen(8000, '0.0.0.0')
+
   } catch (error) {
+
     console.error('Error starting server:', error);
     process.exit(1); 
   }
 }
 
-startServer();
+process.on('SIGINT', async () => {
 
+  await redisClose();
+  await mongoClose();
+  process.exit(0);
+
+})
+
+startServer();

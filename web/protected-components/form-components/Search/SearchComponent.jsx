@@ -17,11 +17,8 @@ const SearchForm = () => {
 
   const handleSubmit = async (e) => {
 
-    console.log('Clicked');
-
     e.preventDefault();
 
-    // Get map bounds
     const minLat = map.getBounds().getSouthWest().lat;
     const minLon = map.getBounds().getSouthWest().lng;
     const maxLat = map.getBounds().getNorthEast().lat;
@@ -35,14 +32,20 @@ const SearchForm = () => {
       const response = await axios.post('http://localhost:8000/api/search', data);
       console.log(response);
 
-      if (!response.status) throw new Error('Network response was not ok');
+      if (!response.status) {
+        throw new Error('Network response was not ok');
+      }
       
       const results = response.data
-      
-      // Clear existing list
+
       const list = document.getElementById("list");
       if (list) {
         list.innerHTML = '';
+      }
+      else {
+        const newList = document.createElement('ul');
+        newList.id = 'list'
+        document.body.appendChild(newList);
       }
 
       if (onlyInBox) {

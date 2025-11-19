@@ -1,9 +1,9 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import ConvertForm from '../form-components/ConvertComponent'
-import SearchForm from '../form-components/SearchComponent';
-import RouteForm from '../form-components/RouteComponent';
+import ConvertForm from '../form-components/Convert/ConvertComponent'
+import SearchForm from '../form-components/Search/SearchComponent';
+import RouteForm from '../form-components/Route/RouteComponent';
 
 import './Dashboard.css'
 

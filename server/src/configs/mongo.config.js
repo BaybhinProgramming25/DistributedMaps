@@ -1,37 +1,23 @@
 const mongoose = require('mongoose');
+const dbName = 'usersStore';
+const url = `mongodb://mongodb:27017/${dbName}`;
 
-// Connection URI
-const uri = 'mongodb://mongo:27017/Users';
+const mongoConnect = async () => {
 
-// Define our database
-let database;
-
-async function connectToMongoDB() {
-  try {
-    // Connect to the MongoDB server using Mongoose
-    await mongoose.connect(uri);
-    console.log('Connected to MongoDB');
-
-    // Access database
-    database = mongoose.connection;
+  try {  
+    await mongoose.connect(url);
+    console.log('Connected successfully to MongoDB!');
   } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
+    console.error('Connection failed: ', error);
   }
 }
 
-// Function to get reference to the database
-function getDatabase() {
-  return database;
+const mongoClose = async () => {
+
+  await mongoose.connection.close();
+  console.log('Mongoose connection closed!');
+
 }
 
-// Function to close the MongoDB connection
-async function closeConnection() {
-  try {
-    await mongoose.disconnect();
-    console.log('MongoDB connection closed');
-  } catch (error) {
-    console.error('Error closing MongoDB connection:', error);
-  }
-}
+module.exports = { mongoConnect, mongoClose }
 
-module.exports = { connectToMongoDB, getDatabase, closeConnection };

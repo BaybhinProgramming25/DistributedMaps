@@ -49,5 +49,7 @@ You can then also visit
 http://localhost:5173/
 ```
 
-# System Design 
+# Architecture
+
+![System Architecture Diagram](images\architecture.png)
 

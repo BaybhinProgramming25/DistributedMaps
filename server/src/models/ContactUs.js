@@ -19,7 +19,7 @@ const contactSchema = new mongoose.Schema({
   }
 });
 
-// Make the model
+
 const ContactUs = mongoose.model('ContactUs', contactSchema);
 
 module.exports = { ContactUs };

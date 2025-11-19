@@ -51,5 +51,5 @@ http://localhost:5173/
 
 # Architecture
 
-![System Architecture Diagram](images\architecture.png)
+![System Architecture Diagram](images/architecture.png)
 

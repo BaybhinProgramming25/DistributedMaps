@@ -2,56 +2,71 @@ const express = require('express');
 const multer = require('multer');
 
 const pool = require('../configs/postgres.config');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const { redisClient } = require('../configs/redis.config')
 
 
 const router = express.Router();
 const upload = multer();
 
 
-// Proxy Route to our Tile Server
-router.use('/tiles/:z/:x/:y.png', createProxyMiddleware({
+router.post('/api/convert', async (req, res) => {
 
-  target: 'http://loadbalancer-tile-server:80',
-  changeOrigin: true,
-  pathRewrite: (path, req) => {
-    const [z, x, y] = path.replace('/tiles/', '').replace('.png', '').split('/');
-    const roundedZ = Math.ceil(z);
-    const roundedX = Math.ceil(x);
-    const roundedY = Math.ceil(y);
-    return `/tile/${roundedZ}/${roundedX}/${roundedY}.png`;
-  },
-  onProxyRes: function (proxyRes, req, res) {
-    console.log(`Response status: ${proxyRes.statusCode}`);
-    console.log(`Response headers: ${JSON.stringify(proxyRes.headers)}`);
-  }
-}));
+    console.log(req.body);
 
+    const { lat, long, zoom } = req.body;
 
-// Convert Endpoint
-router.post('/api/convert', (req, res) => {
+    try {
 
-  const { lat, long, zoom } = req.body;
+        const key_string = `convert:${lat},${long},${zoom}`;
+        const check_convert = await redisClient.get(key_string);
 
-  const latitude = lat;
-  const longitude = long;
-  const lat_rad = latitude * Math.PI / 180;
+        console.log(check_convert)
 
-  const n = Math.pow(2, zoom);
-  const x_tile = n * ((longitude + 180) / 360);
-  const y_tile = n * (1 - (Math.log(Math.tan(lat_rad) + (1 / Math.cos(lat_rad))) / Math.PI)) / 2;
-  
-  res.json({
-    x_tile: x_tile,
-    y_tile: y_tile
-  });
+        if (check_convert) {
+            const data = JSON.parse(check_convert);
+            return res.status(200).json({
+                x_tile: data.x_tile,
+                y_tile: data.y_tile 
+            });
+        } 
+        
+
+        const latitude = lat;
+        const longitude = long;
+        const lat_rad = latitude * Math.PI / 180;
+
+        const n = Math.pow(2, zoom);
+        const x_tile = n * ((longitude + 180) / 360);
+        const y_tile = n * (1 - (Math.log(Math.tan(lat_rad) + (1 / Math.cos(lat_rad))) / Math.PI)) / 2;
+
+        const data = {
+            x_tile: x_tile,
+            y_tile: y_tile
+        }
+
+        await redisClient.set(`convert:${lat},${long},${zoom}`, 3600, JSON.stringify(data));
+
+        return res.status(200).json({
+            x_tile: x_tile,
+            y_tile: y_tile
+        });
+    }
+    catch (error) {
+        console.error('ERROR in /api/convert:', error);
+        res.status(500).json({ error: error.message });
+    }
 });
 
 
-// Search Endpoint
 router.post('/api/search', upload.none(), async (req, res) => {
 
   const { bbox, onlyInBox, searchTerm } = req.body;
+
+  const search_response = await redisClient.get(`search:${searchTerm},${onlyInBox}`);
+  if (search_response) {
+    const data = JSON.parse(search_response);
+    return res.status(200).json({ formattedResults: data })
+  }
 
   let housenumber = null;
   let street = null;
@@ -127,7 +142,7 @@ router.post('/api/search', upload.none(), async (req, res) => {
       const { rows }  = await pool.query(query);
  
       let formattedResults = rows
-        .filter(row => row.name !== null) // Filter out rows with null name
+        .filter(row => row.name !== null) 
         .map(row => ({
           name: row.name,
           coordinates: { lat: row.lat, lon: row.lon },
@@ -171,7 +186,7 @@ router.post('/api/search', upload.none(), async (req, res) => {
           const { rows }  = await pool.query(query);
    
           formattedResults = formattedResults.concat(rows
-            .filter(row => row.name !== null) // Filter out rows with null name
+            .filter(row => row.name !== null) 
             .map(row => ({
               name: row.name,
               coordinates: { lat: row.lat, lon: row.lon },
@@ -184,58 +199,15 @@ router.post('/api/search', upload.none(), async (req, res) => {
               }))
               .filter(result => result.name !== null)
           );
-      }
-      res.status(200).json(formattedResults);
+        }
+
+        await redisClient.setEx(`search:${searchTerm},${onlyInBox}`, 3600, JSON.parse(formattedResults));
+        res.status(200).json({ formattedResults: formattedResults});
   }
   catch (error) {
       console.error('Error searching:', error);
       res.status(200).json({ status: 'ERROR', message: 'Failed to process search query' });
   }
 });
-
-
-// Addrees Endpoint
-router.post('/api/address', async (req, res) => {
-
-  const { lat, lon } = req.body;
-
-  try {
-
-      // Query PostGIS database to find the address
-      const query = `
-      SELECT tags, "addr:housenumber"
-      FROM planet_osm_polygon
-      WHERE tags->'addr:street' != ''
-      ORDER BY ST_Transform(way, 4326) <-> ST_SetSRID(ST_MakePoint($1, $2), 4326)
-      LIMIT 1;
-      `;
-
-      const result = await pool.query(query, [lon, lat]);
-
-      if (result.rows.length === 0) {
-          res.status(200).json({ error: 'No building found at the specified location' });
-          return;
-      }
-
-      // Extract address information from the tags column
-      const tags = result.rows[0].tags;
-
-      const tagsObject = JSON.parse('{' + tags.replace(/=>/g, ':') + '}');
-
-      const address = {
-          number: tagsObject['addr:housenumber'] || '',
-          street: tagsObject['addr:street'] || '',
-          city: tagsObject['addr:city'] || '',
-          state: tagsObject['addr:state'] || '',
-          country: 'US',
-      };
-      res.status(200).json(address)
-      
-  } catch (error) {
-    console.error('Error executing query:', error);
-    res.status(200).json({ error: 'Internal server error' });
-  }
-});
-
 
 module.exports = router;

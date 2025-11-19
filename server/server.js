@@ -1,5 +1,6 @@
 const express = require('express');
 const cookieParser = require('cookie-parser')
+const { createProxyMiddleware } = require('http-proxy-middleware')
 
 const mapRouter = require('./src/routes/map');
 const userRouter = require('./src/routes/user');
@@ -26,6 +27,13 @@ const startServer = async () => {
     app.use('/', routeRouter);
     app.use('/', userRouter);
 
+    app.use('/tile', createProxyMiddleware({
+      target: 'http://tileserver:80/',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/tile': '/tile'
+      }
+    }));
 
     app.listen(8000, '0.0.0.0')
 

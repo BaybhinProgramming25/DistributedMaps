@@ -22,9 +22,8 @@ This project was able to handle a __QoS target requirement of 1600 requests per 
 ```
 https://download.geofabrik.de/
 ```
-# Running Program
 
-This program will __strictly be ran with docker__, as most services used here only work via docker 
+# Running Program with Docker 
 
 ```
 docker-compose --profile db_load up
@@ -37,4 +36,18 @@ You can then visit
 http://localhost:5173/
 ```
 
-Begin exploring around with the
+# Running Program with Make 
+
+```
+make load-db
+make dir 
+```
+
+You can then also visit 
+
+```
+http://localhost:5173/
+```
+
+# System Design 
+
